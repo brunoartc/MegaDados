@@ -60,7 +60,7 @@ class TestProjeto(unittest.TestCase):
     def testa_deleta_post(self):
         conn = self.__class__.connection
         adiciona_usuario(conn, "brunasawdawdd9o", "meueaaddwdmail@eu.com", "SSP-")
-
+        adiciona_usuario(conn, "brunasaawdawwdawdd9o", "meueaadawddwdmail@eu.com", "SSaP-")
         adiciona_post(conn, 1, "titulo1", "url interessante", "texto @banana #mosca @bananoide")
 
         delete_post(conn, 1)
@@ -92,7 +92,7 @@ class TestProjeto(unittest.TestCase):
 
 
         adiciona_usuario(conn, "brunasd9o", "meueadwdmail@eu.com", "SSP-")
-
+        adiciona_usuario(conn, "brunawdawdasd9o", "meueaawdawddwdmail@eawdau.coawdm", "SSPa-")
         adiciona_preferencia(conn, "banana", 1)
         if len(select_pref(conn))<1:
             self.fail('Falhou ao adicionar uma preferencia.')
@@ -105,13 +105,28 @@ class TestProjeto(unittest.TestCase):
     def testa_adiciona_usuario(self):
         conn = self.__class__.connection
 
-        adiciona_usuario(conn, "brun9o", "meuemail@eu.com", "SSP-")
+        adiciona_usuario(conn, "brunad9o", "meuawdemail@eu.com", "SaSP-")
         if len(select_usuarios(conn))<1:
             self.fail('Falhou ao adicionar uma pessoa.')
 
-        adiciona_usuario(conn, "brunftrf9o", "meueffmail@eu.com", "SSP-")
+        adiciona_usuario(conn, "brundwaftrf9o", "meuefawdfmail@eu.com", "SSP-")
         if len(select_usuarios(conn))<2:
             self.fail('Falhou ao adicionar duas pessoas.')
+
+
+
+    # def testa_log(self):
+    #     conn = self.__class__.connection
+
+    #     adiciona_usuario(conn, "brun9o", "meuemail@eu.com", "SSP-")
+    #     adiciona_usuario(conn, "brun9o", "meuema123123il@eu.com", "SSP-")
+    #     adiciona_log_info(conn, "1.1.1.1", "firefox", "motorola", 1)
+    #     if len(select_logs(conn))<1:
+    #         self.fail('Falhou ao adicionar uma pessoa.')
+
+    #     adiciona_log_info(conn, "1.1.1.1", "chrome", "motorola", 1)
+    #     if len(select_logs(conn))<2:
+    #         self.fail('Falhou ao adicionar duas pessoas.')
 
 
   
@@ -140,7 +155,9 @@ def tearDownModule():
 
 if __name__ == '__main__':
     global config
+    
     with open('config_tests.json', 'r') as f:
         config = json.load(f)
+    setUpModule()
     logging.basicConfig(filename=config['LOGFILE'], level=logging.DEBUG)
     unittest.main(verbosity=2)
