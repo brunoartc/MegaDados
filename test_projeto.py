@@ -115,18 +115,19 @@ class TestProjeto(unittest.TestCase):
 
 
 
-    # def testa_log(self):
-    #     conn = self.__class__.connection
+    def testa_log(self):
+        conn = self.__class__.connection
 
-    #     adiciona_usuario(conn, "brun9o", "meuemail@eu.com", "SSP-")
-    #     adiciona_usuario(conn, "brun9o", "meuema123123il@eu.com", "SSP-")
-    #     adiciona_log_info(conn, "1.1.1.1", "firefox", "motorola", 1)
-    #     if len(select_logs(conn))<1:
-    #         self.fail('Falhou ao adicionar uma pessoa.')
+        adiciona_usuario(conn, "brun9o", "meuemail@eu.com", "SSP-")
+        adiciona_usuario(conn, "brun9o", "meuema123123il@eu.com", "SSP-")
+        print(len(select_usuarios(conn)))
+        adiciona_log_info(conn, "1.1.1.1", "firefox", "motorola", 1)
+        if len(select_logs(conn))<1:
+            self.fail('Falhou ao adicionar uma pessoa.')
 
-    #     adiciona_log_info(conn, "1.1.1.1", "chrome", "motorola", 1)
-    #     if len(select_logs(conn))<2:
-    #         self.fail('Falhou ao adicionar duas pessoas.')
+        adiciona_log_info(conn, "1.1.1.1", "chrome", "motorola", 1)
+        if len(select_logs(conn))<2:
+            self.fail('Falhou ao adicionar duas pessoas.')
 
 
   
@@ -155,9 +156,25 @@ def tearDownModule():
 
 if __name__ == '__main__':
     global config
+
+
+
+
     
     with open('config_tests.json', 'r') as f:
         config = json.load(f)
+
+    connn = pymysql.connect(
+        host=config['HOST'],
+        user=config['USER'],
+        password=config['PASS'],
+        database='md'
+    )
+
+    # adiciona_usuario(connn, "brunasawawdawawddawdd9o", "meueaaddwdmail@eu.com", "SSP-") script so esta funcionando se adiciona 2 usuarios fora
+    # adiciona_usuario(connn, "brunasaawdawwdaawdwdd9o", "meueaadawddwdmail@eu.com", "SSaP-")
+
     setUpModule()
+
     logging.basicConfig(filename=config['LOGFILE'], level=logging.DEBUG)
     unittest.main(verbosity=2)
