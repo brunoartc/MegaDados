@@ -1,6 +1,6 @@
 ### SCHEMA
 
-```
+```sql
 #DROP DATABASE IF EXISTS MD;
 
 #CREATE DATABASE MD;
