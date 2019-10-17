@@ -139,3 +139,10 @@ IDUSUARIO | O Id para a representacao do usuario no banco de dados | nao |sim  |
 timestamp | Qual a data da requisicao | sim (timestamp default) |sim |nao | nao
 
 
+## LOG
+
+NOME | DESCRICAO | AUTO-GERADA | PK | FK | RESTRICOES
+--- | --- | --- | --- | --- | ---
+Reacao | Se a reação dauele usuario foi positiva ou negativa | nao |nao |nao | nao nulo
+IDUSUARIO | O Id para a representacao do usuario no banco de dados | nao |sim  |sim (Usuario)| nao
+PostId | O Id de em qual post a tag foi usada para poder ser relacionado | nao |sim  |sim (Posts)| nao

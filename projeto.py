@@ -1,17 +1,11 @@
 import pymysql
 
 
-
-
-
-
-
-
-
 def adiciona_usuario(conn, nome, email, cidade):
     with conn.cursor() as cursor:
         try:
-            cursor.execute('INSERT INTO Usuarios (Nome, Email, Cidade) VALUES (%s, %s, %s)', (nome, email, cidade))
+            cursor.execute(
+                'INSERT INTO Usuarios (Nome, Email, Cidade) VALUES (%s, %s, %s)', (nome, email, cidade))
         except pymysql.err.IntegrityError as e:
             raise ValueError(f'Não posso inserir Usuario na tabela Usuarios')
 
@@ -19,19 +13,20 @@ def adiciona_usuario(conn, nome, email, cidade):
 def adiciona_preferencia(conn, nomePassaro, IdUsuario):
     with conn.cursor() as cursor:
         try:
-            cursor.execute('INSERT INTO Preferencias (PassaroNome, IdUsuario) VALUES (%s, %s)', (nomePassaro, IdUsuario))
+            cursor.execute(
+                'INSERT INTO Preferencias (PassaroNome, IdUsuario) VALUES (%s, %s)', (nomePassaro, IdUsuario))
         except pymysql.err.IntegrityError as e:
             raise ValueError(f'Não posso inserir Usuario na tabela Usuarios')
 
-        
+
 def adciona_tag(conn, PostId, Conteudo):
-    
+
     with conn.cursor() as cursor:
         try:
-            cursor.execute('INSERT INTO Tags (Typee, PostId, Conteudo) VALUES (%s, %s, %s)', (IdUsuario, PostId, Conteudo ))
+            cursor.execute(
+                'INSERT INTO Tags (Typee, PostId, Conteudo) VALUES (%s, %s, %s)', (IdUsuario, PostId, Conteudo))
         except pymysql.err.IntegrityError as e:
             raise ValueError(f'Não posso inserir Usuario na tabela Usuarios')
-
 
 
 def select_posts(conn):
@@ -49,13 +44,13 @@ def select_posts_ativos(conn):
         posts = tuple(x[0] for x in res)
         return posts
 
+
 def select_usuarios(conn):
     with conn.cursor() as cursor:
         cursor.execute('SELECT * FROM Usuarios')
         res = cursor.fetchall()
         usuarios = tuple(x[0] for x in res)
         return usuarios
-
 
 
 def select_logs(conn):
@@ -65,6 +60,7 @@ def select_logs(conn):
         logg = tuple(x[0] for x in res)
         return logg
 
+
 def select_pref(conn):
     with conn.cursor() as cursor:
         cursor.execute('SELECT * FROM Preferencias')
@@ -72,37 +68,45 @@ def select_pref(conn):
         prefs = tuple(x[0] for x in res)
         return prefs
 
+
+def achar_palavras_chave(Texto):
+    tagsAt = []
+    tagsHash = []
+    i = 0
+    while Texto.find("@", i) != -1 or i == len(Texto):
+        i = Texto.find("@", i) + 1
+        print(i)
+        tagsAt.append(Texto[i:Texto.find(" ", i)])
+        i += 1
+    i = 0
+    while Texto.find("#", i) != -1 or i == len(Texto):
+        i = Texto.find("#", i) + 1
+        tagsHash.append(Texto[i:Texto.find(" ", i)])
+        i += 1
+
+    return [tagsAt, tagsHash]
+
+
 def adiciona_post(conn, IdUsuario, Titulo, Url, Texto):
     tagsAt = []
     tagsHash = []
-    i =  0
-    # while Texto.find("@", i)!=-1 or i == len(Texto):
-    #     i = Texto.find("@") + 1
-    #     print(i)
-    #     tagsAt.append(Texto[i:Texto.find(" ")])
-    #     i+=1
-    # i = 0
-    # while Texto.find("#", i)!=-1 or i == len(Texto) :
-    #     i = Texto.find("#") +1
-    #     tagsHash.append(Texto[i:Texto.find(" ")])
-    #     i+=1
+    i = 0
+    [tagsAt, tagsHash] =  achar_palavras_chave(Texto)
 
     id_post = len(select_posts(conn))
 
     for i in tagsAt:
         adciona_tag(conn, id_post, i)
 
-
     for i in tagsHash:
         adciona_tag(conn, id_post, i)
 
-
     with conn.cursor() as cursor:
         try:
-            cursor.execute('INSERT INTO Post (IdUsuario, Titulo, Url, Texto) VALUES (%s, %s, %s, %s)', (IdUsuario, Titulo, Url, Texto ))
+            cursor.execute(
+                'INSERT INTO Post (IdUsuario, Titulo, Url, Texto) VALUES (%s, %s, %s, %s)', (IdUsuario, Titulo, Url, Texto))
         except pymysql.err.IntegrityError as e:
             raise ValueError(f'Não posso inserir Usuario na tabela Usuarios')
-
 
 
 def delete_post(conn, id):
@@ -113,11 +117,12 @@ def delete_post(conn, id):
             raise ValueError(f'Erro ao deleter o post')
 
 
-
-
 def adiciona_log_info(conn, ip, navegador, aparelho, idusuario):
     with conn.cursor() as cursor:
         try:
-            cursor.execute('INSERT INTO Log (Ip, Aparelho, Navegador, IdUsuario) VALUES (%s, %s, %s, %s)', (ip, aparelho, navegador, idusuario ))
+            cursor.execute('INSERT INTO Log (Ip, Aparelho, Navegador, IdUsuario) VALUES (%s, %s, %s, %s)',
+                           (ip, aparelho, navegador, idusuario))
         except pymysql.err.IntegrityError as e:
             raise ValueError(f'Erro ao loggar algo')
+
+
