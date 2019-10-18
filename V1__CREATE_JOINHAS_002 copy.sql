@@ -1,3 +1,5 @@
+USE MEGDA;
+
 CREATE TABLE Joinhas (
     Reacao INT NOT NULL DEFAULT 0,
     PostId INT NOT NULL,
