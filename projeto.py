@@ -45,6 +45,14 @@ def select_posts_ativos(conn):
         return posts
 
 
+def select_posts_ativos_ordem_cronologica(conn):
+    with conn.cursor() as cursor:
+        cursor.execute('SELECT * FROM Post WHERE Existe=1 ORDER BY timestamp ASC')
+        res = cursor.fetchall()
+        posts = tuple(x[0] for x in res)
+        return posts
+
+
 def select_usuarios(conn):
     with conn.cursor() as cursor:
         cursor.execute('SELECT * FROM Usuarios')
@@ -87,6 +95,10 @@ def achar_palavras_chave(Texto):
     return [tagsAt, tagsHash]
 
 
+
+
+
+
 def adiciona_post(conn, IdUsuario, Titulo, Url, Texto):
     tagsAt = []
     tagsHash = []
@@ -126,6 +138,10 @@ def adiciona_log_info(conn, ip, navegador, aparelho, idusuario):
                            (ip, aparelho, navegador, idusuario))
         except pymysql.err.IntegrityError as e:
             raise ValueError(f'Erro ao loggar algo')
+
+
+
+    
 
 
 def commit(conn):
