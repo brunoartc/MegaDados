@@ -7,6 +7,7 @@ import re
 import subprocess
 import unittest
 import pymysql
+import datetime
 
 from projeto import *
 
@@ -45,13 +46,18 @@ class TestProjeto(unittest.TestCase):
         conn = self.__class__.connection
         self.setUp()
 
-        adiciona_usuario(conn, "brunad9o", "meuawdemaidl@eu.com", "SaSP-")
+        adiciona_usuario(conn, "Bruno", "meuaaidl@eu.com", "SP")
         if len(select_usuarios(conn))<1:
             self.fail('Falhou ao adicionar uma pessoa.')
 
-        adiciona_usuario(conn, "brundwaftrf9o", "meuefawasddfmail@eu.com", "SSP-")
+        adiciona_usuario(conn, "brundwaftrf9o", "meuefl@eu.com", "RJ")
         if len(select_usuarios(conn))<2:
             self.fail('Falhou ao adicionar duas pessoas.')
+        adiciona_usuario(conn, "brundwaftawdrf9o", "meuawl@eu.com", "SP")
+        adiciona_usuario(conn, "brundawdwaftrf9o", "medfmail@eu.com", "ES")
+        adiciona_usuario(conn, "brunawdwaftrf9o", "maail@eu.com", "RJ")
+        adiciona_usuario(conn, "brawdundwaftrf9o", "meuefaaail@eu.com", "SP")
+        
         self.commit()
 
     def testa_adiciona_preferencia(self):
@@ -113,6 +119,89 @@ class TestProjeto(unittest.TestCase):
         if len(select_logs(conn))<2:
             self.fail('Falhou ao adicionar duas pessoas.')
         self.commit()
+
+
+
+
+
+
+
+
+    def testa_tags_mencionadas(self):
+        conn = self.__class__.connection
+        self.setUp()
+
+
+        adiciona_log_info(conn, "1.1.2.1", "firefox", "motorola", 1)
+
+
+        adiciona_log_info(conn, "1.1.3.1", "chrome", "motorola", 2)
+        adiciona_log_info(conn, "1.1.4.1", "chrome", "motorola", 3)
+
+        adiciona_log_info(conn, "1.1.5.1", "firefox", "motorola", 4)
+
+        adiciona_log_info(conn, "1.1.6.1", "chrome", "motorola", 5)
+        adiciona_log_info(conn, "1.1.7.1", "safari", "motorola", 6)
+
+        adiciona_log_info(conn, "1.1.8.1", "safari", "motorola", 7)
+
+
+        if (len(acessos_por_aparelho_navergador(conn)) != 3) :
+            self.fail('Falhou no agrupamento.')
+
+
+
+        self.commit()
+
+    def testa_log_agrupado(self):
+        conn = self.__class__.connection
+        self.setUp()
+
+
+        adiciona_post(conn, 4, "PostTesteTags1", "url ainte123essante", "Nao usar o mesmeo texto @Bruno #voaadora @bananquede33")
+        adiciona_post(conn, 2, "PostTesteTags2", "url adinte123essante", "Nao usar o mesmoa texto @Bruno #voaddora @banananoide33")
+        adiciona_post(conn, 3, "PostTesteTags3", "url dinte123essante", "Nao usar o mesmgo texto @Bruno #voaadora @baodinoide33")
+        adiciona_post(conn, 1, "PostTesteTags3", "url dinte123essante", "Nao usar o mesmgo texto @Bruno123 #voaadora @baodinoide33")
+
+        if (len(referencias_por_usuario(conn, "Bruno")) != 3):
+            self.fail('Falhou nas tags.')
+
+
+        #self.commit() Nao dar commit
+
+    def testa_deleta_post(self):
+        conn = self.__class__.connection
+        self.setUp()
+
+        adciona_reacao(conn, 1, 1, 1)
+        adciona_reacao(conn, 1, 1, 2)
+        adciona_reacao(conn, 1, 1, 3)
+        adciona_reacao(conn, 1, 1, 4)
+        
+
+        if (len(select_reacoes(conn)) != 4):
+            self.fail('Falhou nas tags.')
+
+        adciona_reacao(conn, 1, 1, 5)
+        if (len(select_reacoes(conn)) == 4):
+            self.fail('Falhou nas tags ao adicionar mais uma.')
+
+        self.commit()
+
+    def testa_ordem_inversa_insercao(self):
+        conn = self.__class__.connection
+        self.setUp()
+
+
+
+        if (len(select_posts_ativos_ordem_cronologica(conn)) != 6):
+            self.fail('Falhou ao receber os post ja commitados.')
+        print(select_posts_ativos_ordem_cronologica(conn))
+
+
+        #self.commit() Nao dar commit
+
+    
 
 
 

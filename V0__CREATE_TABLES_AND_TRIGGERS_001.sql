@@ -38,7 +38,6 @@ CREATE TABLE Tags (
     PostId INT NOT NULL,
     Conteudo VARCHAR(255) NOT NULL,
     Existe VARCHAR(255),
-    PRIMARY KEY (Typee , PostId , Conteudo),
     FOREIGN KEY (PostId)
         REFERENCES Post (Id)
 );

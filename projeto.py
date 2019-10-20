@@ -1,6 +1,10 @@
 import pymysql
 
 
+global id_post
+id_post = 1
+
+
 def adiciona_usuario(conn, nome, email, cidade):
     with conn.cursor() as cursor:
         try:
@@ -29,6 +33,24 @@ def adciona_tag(conn, typee, PostId, Conteudo):
             raise ValueError(f'Não posso inserir Tags')
 
 
+
+
+def adciona_reacao(conn, Reacao, PostId, IdUsuario):
+
+    with conn.cursor() as cursor:
+        try:
+            cursor.execute(
+                'INSERT INTO Joinhas (Reacao, PostId, IdUsuario) VALUES (%s, %s, %s)', (Reacao, PostId, IdUsuario))
+        except pymysql.err.IntegrityError as e:
+            raise ValueError(f'Não posso inserir reacao ao post')
+
+def select_reacoes(conn):
+    with conn.cursor() as cursor:
+        cursor.execute('SELECT * FROM Joinhas')
+        res = cursor.fetchall()
+        joia = tuple(x[0] for x in res)
+        return joia
+
 def select_posts(conn):
     with conn.cursor() as cursor:
         cursor.execute('SELECT * FROM Post')
@@ -45,12 +67,44 @@ def select_posts_ativos(conn):
         return posts
 
 
-def select_posts_ativos_ordem_cronologica(conn):
+def select_posts_ativos_ordem_cronologica(conn): #TODO: need unit test
     with conn.cursor() as cursor:
-        cursor.execute('SELECT * FROM Post WHERE Existe=1 ORDER BY timestamp ASC')
+        cursor.execute('SELECT * FROM Post WHERE Existe=1 ORDER BY timestampe DESC')
         res = cursor.fetchall()
-        posts = tuple(x[0] for x in res)
+        posts = [x for x in res]
         return posts
+
+
+def select_usuarios_famosos_por_cidade(conn, nome_cidade): #TODO: need unit test
+    with conn.cursor() as cursor:
+        cursor.execute('SELECT COUNT(*) AS POSTS,IdUsuario FROM Post INNER JOIN usuarios ON Post.IdUsuario = usuarios.id WHERE Cidade=%s GROUP BY IdUsuario', nome_cidade)
+        res = cursor.fetchall()
+        usuarios = tuple(x[0] for x in res)
+        return usuarios
+
+def referencias_por_usuario(conn, nome_usuario):
+    with conn.cursor() as cursor:
+        cursor.execute('SELECT Conteudo AS Referenciado, IdUsuario AS Referencia_Id_Usuario, PostId AS NoPost FROM Tags INNER JOIN Post ON Tags.PostId = Post.Id WHERE Conteudo = %s', nome_usuario)
+        res = cursor.fetchall()
+        usuarios = [str(x) for x in res]
+        return usuarios
+        
+
+
+def acessos_por_aparelho_navergador(conn):
+    with conn.cursor() as cursor:
+        cursor.execute('SELECT Aparelho,Navegador,COUNT(*) AS TOTAL FROM log GROUP BY Aparelho,Navegador')
+        res = cursor.fetchall()
+        conta = tuple(x[0] for x in res)
+        return conta
+
+
+
+
+
+
+
+
 
 
 def select_usuarios(conn):
@@ -83,7 +137,6 @@ def achar_palavras_chave(Texto):
     i = 0
     while Texto.find("@", i) != -1 or i == len(Texto):
         i = Texto.find("@", i) + 1
-        print(i)
         tagsAt.append(Texto[i:Texto.find(" ", i)])
         i += 1
     i = 0
@@ -104,8 +157,8 @@ def adiciona_post(conn, IdUsuario, Titulo, Url, Texto):
     tagsHash = []
     i = 0
     [tagsAt, tagsHash] =  achar_palavras_chave(Texto)
-
-    id_post = len(select_posts(conn))
+    global id_post
+    id_post +=1
 
     
     with conn.cursor() as cursor:
@@ -115,7 +168,8 @@ def adiciona_post(conn, IdUsuario, Titulo, Url, Texto):
             cursor.execute(
                 'COMMIT')
             for i in tagsAt:
-                adciona_tag(conn,1, 1, i)
+
+                adciona_tag(conn,2, 1, i)
 
             for i in tagsHash:
                 adciona_tag(conn,2, 1, i)
