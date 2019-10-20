@@ -1,7 +1,8 @@
-#DROP DATABASE IF EXISTS MD;
+DROP DATABASE IF EXISTS MEGDA;
 
-#CREATE DATABASE MD;
-USE MD;
+CREATE DATABASE MEGDA;
+
+USE MEGDA;
 
 
 
@@ -24,7 +25,7 @@ CREATE TABLE Post (
     Id INT AUTO_INCREMENT,
     IdUsuario INT NOT NULL,
     Titulo VARCHAR(255) NOT NULL,
-    Url VARCHAR(255) NOT NULL,
+    Url VARCHAR(255),
     Texto VARCHAR(255),
     Existe int DEFAULT 1,
     PRIMARY KEY (Id),
@@ -37,7 +38,6 @@ CREATE TABLE Tags (
     PostId INT NOT NULL,
     Conteudo VARCHAR(255) NOT NULL,
     Existe VARCHAR(255),
-    PRIMARY KEY (Typee , PostId , Conteudo),
     FOREIGN KEY (PostId)
         REFERENCES Post (Id)
 );
