@@ -25,7 +25,7 @@ CREATE TABLE Post (
     Id INT AUTO_INCREMENT,
     IdUsuario INT NOT NULL,
     Titulo VARCHAR(255) NOT NULL,
-    Url VARCHAR(255) NOT NULL,
+    Url VARCHAR(255),
     Texto VARCHAR(255),
     Existe int DEFAULT 1,
     PRIMARY KEY (Id),

@@ -4,7 +4,7 @@ from projeto import *
 app = FastAPI()
 
 
-connn = pymysql.connect(
+conn = pymysql.connect(
         host=config['HOST'],
         user=config['USER'],
         password=config['PASS'],
@@ -25,62 +25,83 @@ class Reacao(BaseModel):
     Reacao: str
     PostId: int
     IdUsuario: int
-@app.post("/")
-def adiciona_usuario( usuario : Usuario)
 
-@app.post("/")
-def adiciona_preferencia( preferencia : Preferencia)
+class Post(BaseModel):
+    IdUsuario : int
+    Titulo: str
+    Url: str = None 
+    Texto : str = None
 
-@app.post("/")
-def adciona_reacao( reacao : Reacao)
+@app.post("/user/add")
+def adiciona_usuario_server( usuario : Usuario)
+    return adiciona_usuario(conn, usuario.nome, usuario.email, usuario.cidade)
 
-def select_usuarios(conn)
+@app.post("/user/pref/add")
+def adiciona_preferencia_server( preferencia : Preferencia)
+    return adiciona_preferencia(conn, preferencia.nomePassaro,  preferencia.IdUsuario)
+
+@app.post("/posts/reaction")
+def adciona_reacao_server( reacao : Reacao)
+     return adciona_reacao(conn, reacao.Reacao, reacao.PostId, reacao.IdUsuario)
+
+@app.post("/posts")  
+def adiciona_post_server( post: Post)
+    adiciona_post(conn, post.IdUsuario, post.Titulo, post.Url, post.Texto)
+
+@app.get("/user/all")
+def select_usuarios_server():
+    return select_usuarios(conn)
+
+@app.get("/logs")
+def select_logs_server():
+    return select_logs(conn)
+
+@app.get("/user/prefs")
+def select_pref_server():
+    return select_pref(conn)
 
 
-def select_logs(conn)
+@app.get("/posts/reaction")
+def select_reacoes_server():
+    return select_reacoes(conn)
 
+@app.get("/posts/all")
+def select_posts_server():
+    return select_posts(conn)
+@app.get("/posts/active")
+def select_posts_ativos_server():
+    return select_posts_ativos(conn)
 
-def select_pref(conn)
-
-
-@app.get("/")
-def select_reacoes_server(conn)
-
-@app.get("/")
-def select_posts_server(conn)
-
-@app.get("/")
-def select_posts_ativos_server(conn)
-
-@app.get("/")
-def select_posts_ativos_ordem_cronologica_server(conn)
-
-@app.get("/")
-def acessos_por_aparelho_navergador_server(conn)
+@app.get("/posts/order/timestamp")
+def select_posts_ativos_ordem_cronologica_server():
+    return select_posts_ativos_ordem_cronologica(conn)
+@app.get("/logs/devices")
+def acessos_por_aparelho_navergador_server():
+    return acessos_por_aparelho_navergador(conn)
 
 @app.get("/{nome_cidade}")
-def select_usuarios_famosos_por_cidade_server( nome_cidade)
-
+def select_usuarios_famosos_por_cidade_server( nome_cidade):
+    return select_usuarios_famosos_por_cidade(conn, nome_cidade)
 
 @app.get("/{nome_usuario}")
-def referencias_por_usuario_server( nome_usuario)
+def referencias_por_usuario_server( nome_usuario):
+    return referencias_por_usuario(conn, nome_usuario)
 
 
-@app.get("/{Limite}")
-def acessos_no_dia_server( Limite)
+@app.get("/logs/day/{Limite}")
+def acessos_no_dia_server( Limite):
+    return acessos_no_dia(conn, Limite)
 
-@app.get("/{passaro}")
-def url_por_passaros_server( passaro)
-
-
-        
-def adiciona_post( IdUsuario, Titulo, Url, Texto)
+@app.get("/images/{passaro}")
+def url_por_passaros_server( passaro):
+    return url_por_passaros(conn, passaro)
 
 
-def delete_post( id)
 
+@app.delete("/{id}")
+def delete_post_server( id):
+    return delete_post(conn, id)
 
-def adiciona_log_info( ip, navegador, aparelho, idusuario)
 
 
 
