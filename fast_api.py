@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from projeto import *
 import json
 from pydantic import BaseModel
+from starlette.requests import Request
 
 app = FastAPI()
 
@@ -43,12 +44,12 @@ class Post(BaseModel):
     Texto: str = None
 
 
-@app.post("/user/add")
+@app.post("/user")
 def adiciona_usuario_server(usuario: Usuario):
     return adiciona_usuario(conn, usuario.nome, usuario.email, usuario.cidade)
 
 
-@app.post("/user/pref/add")
+@app.post("/user/pref")
 def adiciona_preferencia_server(preferencia: Preferencia):
     return adiciona_preferencia(conn, preferencia.nomePassaro,  preferencia.IdUsuario)
 
@@ -84,7 +85,11 @@ def select_reacoes_server():
 
 
 @app.get("/posts/all")
-def select_posts_server():
+def select_posts_server(request: Request):
+    ip = request.client.host
+    info = request.headers["user-agent"].split()
+    print(info)
+    adiciona_log_info(conn, ip, info[-2], info[1], 1)
     return select_posts(conn)
 
 
