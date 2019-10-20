@@ -79,7 +79,7 @@ class TestProjeto(unittest.TestCase):
         self.setUp()
         adiciona_usuario(conn, "brunasawdawdd9o", "meueaaddwdmail@eu.com", "SSP-")
 
-        adiciona_post(conn, 1, "titulo1", "url interessante", "texto @banana #mosca @bananoide")
+        adiciona_post(conn, 1, "titulo1", "url interessante1", "texto @banana #mosca @bananoide")
         if len(select_posts(conn))<1:
             self.fail('Falhou ao adicionar um post.')
 
@@ -87,7 +87,7 @@ class TestProjeto(unittest.TestCase):
         #if not len(select_posts(conn))<2:
         #    self.fail('Falhou ao adicionar um post repetido.')
 
-        adiciona_post(conn, 1, "titul1o1", "url inte123essante", "Nao usar o mesmo texto @bana123na #voadora @bananoide33")
+        adiciona_post(conn, 1, "titul1o1", "url inte123essante 1", "Nao usar o mesmo texto @bana123na #voadora @bananoide33")
         if len(select_posts(conn))<2:
             self.fail('Falhou ao adicionar dois posts.')
 
@@ -219,6 +219,28 @@ class TestProjeto(unittest.TestCase):
             self.fail('Falhou no usuario mais famoso do Rio.')
 
         self.commit()
+    
+    def testa_usuarios_dia(self):
+        conn = self.__class__.connection
+        self.setUp()
+
+
+
+        if (len(acessos_no_dia(conn, 10))!=2):
+            self.fail('Falhou ao tentar checar os logs do dia.')
+
+
+    def testa_pegaroslinks_por_passaro(self):
+        conn = self.__class__.connection
+        self.setUp()
+
+
+
+        if (len(url_por_passaros(conn, "voaadora")) != 3): #tres referenciando o prinmeiro post 
+            self.fail('Falhou ao achar urls.')
+
+        
+
 
     
 

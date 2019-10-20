@@ -99,6 +99,23 @@ def acessos_por_aparelho_navergador(conn):
         return conta
 
 
+def acessos_no_dia(conn, Limite):
+    with conn.cursor() as cursor:
+        cursor.execute('SELECT timestampe,COUNT(*) AS TOTAL FROM log GROUP BY timestampe LIMIT %s', Limite)
+        res = cursor.fetchall()
+        acessos = [x for x in res]
+        return acessos
+
+def url_por_passaros(conn, passaro):
+    with conn.cursor() as cursor:
+        cursor.execute('SELECT Url FROM Post INNER JOIN Tags ON Post.Id = Tags.PostId WHERE Conteudo = %s', passaro)
+        res = cursor.fetchall()
+        url = [x for x in res]
+        return url
+
+
+        
+
 
 
 
