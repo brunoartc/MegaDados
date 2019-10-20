@@ -8,6 +8,7 @@ import subprocess
 import unittest
 import pymysql
 import datetime
+import time
 
 from projeto import *
 
@@ -196,10 +197,28 @@ class TestProjeto(unittest.TestCase):
 
         if (len(select_posts_ativos_ordem_cronologica(conn)) != 6):
             self.fail('Falhou ao receber os post ja commitados.')
-        print(select_posts_ativos_ordem_cronologica(conn))
+        time.sleep(1)
+        adiciona_post(conn, 1, "PostTesteTags3", "url dinte123essante", "Nao usar o mesmgo texto @Bruno123 #voaadora @baodinoide33")
+        datas = [x[-1] for x in select_posts_ativos_ordem_cronologica(conn)]
+
+        if ((datas[0]<datas[-1])):
+            self.fail('Nao retorno na ordem inversa cronologica.')
+
+        self.commit()
 
 
-        #self.commit() Nao dar commit
+    def testa_usuario_famoso(self):
+        conn = self.__class__.connection
+        self.setUp()
+
+
+
+        if (len(select_usuarios_famosos_por_cidade(conn, "SP")) != 2):
+            self.fail('Falhou no usuario mais famoso de Sao Paulo.')
+        if (len(select_usuarios_famosos_por_cidade(conn, "RJ")) != 1):
+            self.fail('Falhou no usuario mais famoso do Rio.')
+
+        self.commit()
 
     
 

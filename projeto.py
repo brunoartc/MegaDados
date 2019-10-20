@@ -67,7 +67,7 @@ def select_posts_ativos(conn):
         return posts
 
 
-def select_posts_ativos_ordem_cronologica(conn): #TODO: need unit test
+def select_posts_ativos_ordem_cronologica(conn):
     with conn.cursor() as cursor:
         cursor.execute('SELECT * FROM Post WHERE Existe=1 ORDER BY timestampe DESC')
         res = cursor.fetchall()
@@ -75,11 +75,11 @@ def select_posts_ativos_ordem_cronologica(conn): #TODO: need unit test
         return posts
 
 
-def select_usuarios_famosos_por_cidade(conn, nome_cidade): #TODO: need unit test
+def select_usuarios_famosos_por_cidade(conn, nome_cidade):
     with conn.cursor() as cursor:
         cursor.execute('SELECT COUNT(*) AS POSTS,IdUsuario FROM Post INNER JOIN usuarios ON Post.IdUsuario = usuarios.id WHERE Cidade=%s GROUP BY IdUsuario', nome_cidade)
         res = cursor.fetchall()
-        usuarios = tuple(x[0] for x in res)
+        usuarios = [x for x in res]
         return usuarios
 
 def referencias_por_usuario(conn, nome_usuario):
