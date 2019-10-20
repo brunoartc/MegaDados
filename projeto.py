@@ -12,6 +12,7 @@ def adiciona_usuario(conn, nome, email, cidade):
                 'INSERT INTO Usuarios (Nome, Email, Cidade) VALUES (%s, %s, %s)', (nome, email, cidade))
         except pymysql.err.IntegrityError as e:
             raise ValueError(f'Não posso inserir Usuario na tabela Usuarios')
+    commit(conn)
 
 
 def adiciona_preferencia(conn, nomePassaro, IdUsuario):
@@ -33,8 +34,6 @@ def adciona_tag(conn, typee, PostId, Conteudo):
             raise ValueError(f'Não posso inserir Tags')
 
 
-
-
 def adciona_reacao(conn, Reacao, PostId, IdUsuario):
 
     with conn.cursor() as cursor:
@@ -44,12 +43,14 @@ def adciona_reacao(conn, Reacao, PostId, IdUsuario):
         except pymysql.err.IntegrityError as e:
             raise ValueError(f'Não posso inserir reacao ao post')
 
+
 def select_reacoes(conn):
     with conn.cursor() as cursor:
         cursor.execute('SELECT * FROM Joinhas')
         res = cursor.fetchall()
-        joia = tuple(x[0] for x in res)
+        joia = [x for x in res]
         return joia
+
 
 def select_posts(conn):
     with conn.cursor() as cursor:
@@ -63,13 +64,14 @@ def select_posts_ativos(conn):
     with conn.cursor() as cursor:
         cursor.execute('SELECT * FROM Post WHERE Existe=1')
         res = cursor.fetchall()
-        posts = tuple(x[0] for x in res)
+        posts = [x for x in res]
         return posts
 
 
 def select_posts_ativos_ordem_cronologica(conn):
     with conn.cursor() as cursor:
-        cursor.execute('SELECT * FROM Post WHERE Existe=1 ORDER BY timestampe DESC')
+        cursor.execute(
+            'SELECT * FROM Post WHERE Existe=1 ORDER BY timestampe DESC')
         res = cursor.fetchall()
         posts = [x for x in res]
         return posts
@@ -77,23 +79,25 @@ def select_posts_ativos_ordem_cronologica(conn):
 
 def select_usuarios_famosos_por_cidade(conn, nome_cidade):
     with conn.cursor() as cursor:
-        cursor.execute('SELECT COUNT(*) AS POSTS,IdUsuario FROM Post INNER JOIN usuarios ON Post.IdUsuario = usuarios.id WHERE Cidade=%s GROUP BY IdUsuario', nome_cidade)
+        cursor.execute(
+            'SELECT COUNT(*) AS POSTS,IdUsuario FROM Post INNER JOIN usuarios ON Post.IdUsuario = usuarios.id WHERE Cidade=%s GROUP BY IdUsuario', nome_cidade)
         res = cursor.fetchall()
         usuarios = [x for x in res]
         return usuarios
+
 
 def referencias_por_usuario(conn, nome_usuario):
     with conn.cursor() as cursor:
         cursor.execute('SELECT Conteudo AS Referenciado, IdUsuario AS Referencia_Id_Usuario, PostId AS NoPost FROM Tags INNER JOIN Post ON Tags.PostId = Post.Id WHERE Conteudo = %s', nome_usuario)
         res = cursor.fetchall()
-        usuarios = [str(x) for x in res]
+        usuarios = [x for x in res]
         return usuarios
-        
 
 
 def acessos_por_aparelho_navergador(conn):
     with conn.cursor() as cursor:
-        cursor.execute('SELECT Aparelho,Navegador,COUNT(*) AS TOTAL FROM log GROUP BY Aparelho,Navegador')
+        cursor.execute(
+            'SELECT Aparelho,Navegador,COUNT(*) AS TOTAL FROM log GROUP BY Aparelho,Navegador')
         res = cursor.fetchall()
         conta = tuple(x[0] for x in res)
         return conta
@@ -101,34 +105,27 @@ def acessos_por_aparelho_navergador(conn):
 
 def acessos_no_dia(conn, Limite):
     with conn.cursor() as cursor:
-        cursor.execute('SELECT timestampe,COUNT(*) AS TOTAL FROM log GROUP BY timestampe LIMIT %s', Limite)
+        cursor.execute(
+            'SELECT timestampe,COUNT(*) AS TOTAL FROM log GROUP BY timestampe LIMIT %s', Limite)
         res = cursor.fetchall()
         acessos = [x for x in res]
         return acessos
 
+
 def url_por_passaros(conn, passaro):
     with conn.cursor() as cursor:
-        cursor.execute('SELECT Url FROM Post INNER JOIN Tags ON Post.Id = Tags.PostId WHERE Conteudo = %s', passaro)
+        cursor.execute(
+            'SELECT Url FROM Post INNER JOIN Tags ON Post.Id = Tags.PostId WHERE Conteudo = %s', passaro)
         res = cursor.fetchall()
         url = [x for x in res]
         return url
-
-
-        
-
-
-
-
-
-
-
 
 
 def select_usuarios(conn):
     with conn.cursor() as cursor:
         cursor.execute('SELECT * FROM Usuarios')
         res = cursor.fetchall()
-        usuarios = tuple(x[0] for x in res)
+        usuarios = [x for x in res]
         return usuarios
 
 
@@ -136,7 +133,7 @@ def select_logs(conn):
     with conn.cursor() as cursor:
         cursor.execute('SELECT * FROM Log')
         res = cursor.fetchall()
-        logg = tuple(x[0] for x in res)
+        logg = [x for x in res]
         return logg
 
 
@@ -144,7 +141,7 @@ def select_pref(conn):
     with conn.cursor() as cursor:
         cursor.execute('SELECT * FROM Preferencias')
         res = cursor.fetchall()
-        prefs = tuple(x[0] for x in res)
+        prefs = [x for x in res]
         return prefs
 
 
@@ -165,19 +162,14 @@ def achar_palavras_chave(Texto):
     return [tagsAt, tagsHash]
 
 
-
-
-
-
 def adiciona_post(conn, IdUsuario, Titulo, Url, Texto):
     tagsAt = []
     tagsHash = []
     i = 0
-    [tagsAt, tagsHash] =  achar_palavras_chave(Texto)
+    [tagsAt, tagsHash] = achar_palavras_chave(Texto)
     global id_post
-    id_post +=1
+    id_post += 1
 
-    
     with conn.cursor() as cursor:
         try:
             cursor.execute(
@@ -186,10 +178,10 @@ def adiciona_post(conn, IdUsuario, Titulo, Url, Texto):
                 'COMMIT')
             for i in tagsAt:
 
-                adciona_tag(conn,2, 1, i)
+                adciona_tag(conn, 2, 1, i)
 
             for i in tagsHash:
-                adciona_tag(conn,2, 1, i)
+                adciona_tag(conn, 2, 1, i)
         except pymysql.err.IntegrityError as e:
             raise ValueError(f'Não posso inserir Usuario na tabela Posts')
 
@@ -211,10 +203,6 @@ def adiciona_log_info(conn, ip, navegador, aparelho, idusuario):
             raise ValueError(f'Erro ao loggar algo')
 
 
-
-    
-
-
 def commit(conn):
     with conn.cursor() as cursor:
         try:
@@ -222,6 +210,6 @@ def commit(conn):
         except pymysql.err.IntegrityError as e:
             raise ValueError(f'Erro ao commitar')
 
+
 def adciona_usuario_e_post(conn, IdUsuario, Titulo, Url, Texto, nome, email, cidade):
     adiciona_post(conn, IdUsuario, Titulo, Url, Texto)
-

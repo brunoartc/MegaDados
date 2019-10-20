@@ -1,3 +1,40 @@
+# Use the uvicorn to run the app
+
+### Windows
+
+#### change the path of mysql to "C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\mysql" and username & password in config_test.json
+
+```batch
+%USERPROFILE%\AppData\Local\Programs\Python\Python37-32\Scripts\pip install uvicorn
+%USERPROFILE%\AppData\Local\Programs\Python\Python37-32\Lib\site-packages\uvicorn\main.py fast_api:app --reload
+```
+
+or 
+
+```batch
+pip install uvicorn
+uvicorn fast_api:app --reload
+```
+
+
+### Linux
+
+#### change the path of mysql to "/usr/bin/mysql" and username & password in config_test.json
+
+```shell
+pip3 install uvicorn
+uvicorn fast_api:app --reload
+```
+
+
+### API documentation
+
+#### available after the server start at http://localhost:8000/docs#/
+
+
+
+
+
 ### SCHEMA
 
 ## MODELO ENTIDADE-RELACIONAMENTO
