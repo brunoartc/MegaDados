@@ -44,6 +44,16 @@ def adciona_reacao(conn, Reacao, PostId, IdUsuario):
             raise ValueError(f'Não posso inserir reacao ao post')
 
 
+def edita_reacao(conn, Reacao, PostId, IdUsuario):
+
+    with conn.cursor() as cursor:
+        try:
+            cursor.execute(
+                'UPDATE Joinhas SET Reacao = %s WHERE PostId = %s AND IdUsuario = %s', (Reacao, PostId, IdUsuario))
+        except pymysql.err.IntegrityError as e:
+            raise ValueError(f'Não posso editar reacao ao post')
+
+
 def select_reacoes(conn):
     with conn.cursor() as cursor:
         cursor.execute('SELECT * FROM Joinhas')

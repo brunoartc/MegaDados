@@ -161,7 +161,7 @@ class TestProjeto(unittest.TestCase):
 
         # self.commit() Nao dar commit
 
-    def testa_deleta_post(self):
+    def testa_reacao(self):
         conn = self.__class__.connection
         self.setUp()
 
@@ -169,7 +169,7 @@ class TestProjeto(unittest.TestCase):
         adciona_reacao(conn, 1, 1, 2)
         adciona_reacao(conn, 1, 1, 3)
         adciona_reacao(conn, 1, 1, 4)
-
+        edita_reacao(conn, 3, 1, 4)
         if (len(select_reacoes(conn)) != 4):
             self.fail('Falhou nas tags.')
 
@@ -182,8 +182,7 @@ class TestProjeto(unittest.TestCase):
     def testa_ordem_inversa_insercao(self):
         conn = self.__class__.connection
         self.setUp()
-
-        if (len(select_posts_ativos_ordem_cronologica(conn)) != 6):
+        if (len(select_posts_ativos_ordem_cronologica(conn)) != 4):
             self.fail('Falhou ao receber os post ja commitados.')
         time.sleep(1)
         adiciona_post(conn, 1, "PostTesteTags3", "url dinte123essante",
@@ -216,7 +215,6 @@ class TestProjeto(unittest.TestCase):
     def testa_pegaroslinks_por_passaro(self):
         conn = self.__class__.connection
         self.setUp()
-
         if (len(url_por_passaros(conn, "voaadora")) != 3):  # tres referenciando o prinmeiro post
             self.fail('Falhou ao achar urls.')
 

@@ -58,6 +58,10 @@ def adiciona_preferencia_server(preferencia: Preferencia):
 def adciona_reacao_server(reacao: Reacao):
     return {"obs" : "resposta pdoe vir incoerente por usar um id de post fixo", "data":adciona_reacao(conn, reacao.Reacao, reacao.PostId, reacao.IdUsuario)}
 
+@app.put("/posts/reaction")
+def adciona_reacao_server(reacao: Reacao):
+    return {"obs" : "resposta pdoe vir incoerente por usar um id de post fixo", "data":edita_reacao(conn, reacao.Reacao, reacao.PostId, reacao.IdUsuario)}
+
 
 @app.post("/posts")
 def adiciona_post_server(post: Post):
