@@ -41,7 +41,11 @@ uvicorn fast_api:app --reload
 ![Entidade Rerlacionamento](entidade-relacionamento.png)
 
 ## MODELO RELACIONAL
-![Modelo relacional](relacional.png)
+![Modelo relacional](relacional_n.png)
+
+
+## REQUISITOS FUNCIONAIS
+- 
 
 
 ## DESCRICAO DE TABELAS
